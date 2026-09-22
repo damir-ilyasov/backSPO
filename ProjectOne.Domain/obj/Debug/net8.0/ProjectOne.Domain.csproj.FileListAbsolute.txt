@@ -1,0 +1,12 @@
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\bin\Debug\net8.0\ProjectOne.Domain.deps.json
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\bin\Debug\net8.0\ProjectOne.Domain.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\bin\Debug\net8.0\ProjectOne.Domain.pdb
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.csproj.AssemblyReference.cache
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.AssemblyInfoInputs.cache
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.AssemblyInfo.cs
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\refint\ProjectOne.Domain.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.pdb
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ref\ProjectOne.Domain.dll

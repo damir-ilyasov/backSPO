@@ -143,3 +143,118 @@ ORM / доступ к данным
 9.	Материалы по ER-диаграммам. — URL: https://practicum.yandex.ru/blog/chto-takoe-er-diagramma/ 
 10.	Материалы по диаграммам классов UML. — URL: https://habr.com/ru/articles/511798/ 
 11.	Материалы по UserStoryMap. — URL: https://crmgroup.ru/glossary/user-story-mapping/
+
+# Backend (Аренда складских ячеек)
+
+Backend на ASP.NET Core 8, PostgreSQL, Clean Architecture.
+
+## Стек
+
+- .NET 8
+- PostgreSQL 16
+- Entity Framework Core (Npgsql)
+- ASP.NET Identity + JWT (в HttpOnly-куке)
+- CSharpFunctionalExtensions (Result-паттерн)
+- Swagger / Swashbuckle
+
+## Структура решения
+
+```
+ProjectOne/                    — Api (контроллеры, Program.cs, Swagger)
+ProjectOne.Application/        — сценарии использования, DTO, интерфейсы репозиториев
+ProjectOne.Domain/             — сущности, value object'ы, доменные правила
+ProjectOne.Infrastructure/      — EF Core, репозитории, Identity, JWT
+```
+
+## Требования
+
+- .NET 8 SDK
+- Docker Desktop (для PostgreSQL)
+- dotnet-ef (`dotnet tool install --global dotnet-ef`, если ещё не установлен)
+
+## 1. Поднять базу данных
+
+В корне решения лежит `docker-compose.yml`:
+
+```bash
+docker compose up -d
+```
+
+Проверить, что контейнер поднялся:
+
+```bash
+docker compose ps
+```
+
+База будет доступна на `localhost:5432`, пользователь `postgres`, пароль `postgres`,
+база данных `projectone` (см. `docker-compose.yml`, при необходимости поменяйте).
+
+## 2. Настроить конфигурацию
+
+В `ProjectOne/appsettings.Development.json` (создайте, если его нет) укажите:
+
+```json
+{
+  "ConnectionStrings": {
+    "Db": "Host=localhost;Port=5432;Database=projectone;Username=postgres;Password=postgres"
+  },
+  "Jwt": {
+    "Issuer": "ProjectOne",
+    "Audience": "ProjectOneClients",
+    "Key": "замените-на-свой-секретный-ключ-минимум-32-символа",
+    "ExpiresMinutes": 120
+  }
+}
+```
+
+## 3. Применить миграции
+
+Миграции применяются автоматически при старте приложения (см. `Program.cs`,
+`db.Database.MigrateAsync()`). Ручной запуск, если нужно применить их отдельно:
+
+```bash
+dotnet ef database update -p ProjectOne.Infrastructure -s ProjectOne
+```
+
+Создание новой миграции после изменения сущностей:
+
+```bash
+dotnet ef migrations add НазваниеМиграции -p ProjectOne.Infrastructure -s ProjectOne
+```
+
+## 4. Запустить API
+
+```bash
+dotnet run --project ProjectOne
+```
+
+По умолчанию API поднимется на `https://localhost:44373` (или на порт, указанный
+в `ProjectOne/Properties/launchSettings.json`).
+
+Swagger UI: `https://localhost:44373/swagger`
+
+## 5. Аутентификация
+
+Токен выдаётся в виде `HttpOnly`-куки `access_token` после `POST /auth/login` или
+`POST /auth/register` — фронтенд не работает с токеном напрямую, достаточно
+отправлять запросы с `credentials: 'include'` (fetch) или `withCredentials: true`
+(axios).
+
+Выход: `POST /auth/logout` - удаляет куки.
+
+## 6. CORS
+
+Список разрешённых origin'ов фронтенда задан в `Program.cs` (`AddCors`). При смене
+порта/адреса фронтенда - обновите `WithOrigins(...)`.
+
+## Возможные проблемы при запуске
+
+- **Postgres не пускает по паролю** — убедитесь, что контейнер поднят с тем же
+  паролем, что указан в строке подключения; при смене пароля в `docker-compose.yml`
+  для уже созданного контейнера нужно пересоздать volume
+  (`docker compose down -v && docker compose up -d`).
+- **Не собирается миграция из-за FluentValidation.AspNetCore** — пакет не используется
+  в проекте, валидация выполняется через `FluentValidation` + ручной вызов в
+  хендлерах.
+- **CORS-ошибка в браузере при логине с фронта** — проверьте, что адрес фронтенда
+  указан в `WithOrigins`, а запрос идёт с `credentials: 'include'`.

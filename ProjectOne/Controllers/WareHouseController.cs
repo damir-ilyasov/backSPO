@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectOne.Application.WareHouse.CreateWareHouse;
 using ProjectOne.Application.WareHouse.DeleteWareHouse;
 using ProjectOne.Application.WareHouse.GetWareHouse;
 using ProjectOne.Application.WareHouse.PatchWareHouse;
 using ProjectOne.Application.WareHouse.UpdateWareHouse;
+using ProjectOne.Domain.Enum;
 using ProjectOne.Extensions;
 
 namespace ProjectOne.Controllers;
@@ -13,6 +15,7 @@ namespace ProjectOne.Controllers;
 public class WareHouseController : ControllerBase
 {
     [HttpPost]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> AddWareHouseAsync(
         [FromServices] CreateWareHouseHandler createWareHouseHandler,
         [FromBody] CreateWareHouseRequest createWareHouseRequest,
@@ -24,6 +27,7 @@ public class WareHouseController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<WareHouseResponse>> GetWareHouseAsync(
         [FromServices] GetWareHouseHandler handler,
         Guid id,
@@ -34,6 +38,7 @@ public class WareHouseController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<WareHouseResponse>>> GetWareHousesAsync(
         [FromServices] GetWareHousesHandler handler,
         CancellationToken cancellationToken = default)
@@ -43,6 +48,7 @@ public class WareHouseController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> UpdateWareHouseAsync(
         [FromServices] UpdateWareHouseHandler handler,
         Guid id,
@@ -54,6 +60,7 @@ public class WareHouseController : ControllerBase
     }
 
     [HttpPatch("{id:guid}")]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> PatchWareHouseAsync(
         [FromServices] PatchWareHouseHandler handler,
         Guid id,
@@ -65,6 +72,7 @@ public class WareHouseController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = Roles.Administrator)]    
     public async Task<ActionResult> DeleteWareHouseAsync(
         [FromServices] DeleteWareHouseHandler handler,
         Guid id,

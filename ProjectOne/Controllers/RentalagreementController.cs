@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectOne.Application.Rentalagreement.CreateRentalagreement;
 using ProjectOne.Application.Rentalagreement.DeleteRentalagreement;
 using ProjectOne.Application.Rentalagreement.GetRentalagreement;
 using ProjectOne.Application.Rentalagreement.UpdateRentalagreement;
+using ProjectOne.Domain.Enum;
 using ProjectOne.Extensions;
 
 namespace ProjectOne.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = $"{Roles.Administrator}, {Roles.Client}")]
 public class RentalagreementController : ControllerBase
 {
     [HttpPost]
@@ -53,7 +56,7 @@ public class RentalagreementController : ControllerBase
         var result = await handler.UpdateAsync(id, request, cancellationToken);
         return result.ToResponse();
     }
-
+    
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteRentalagreementAsync(
         [FromServices] DeleteRentalagreementHandler handler,

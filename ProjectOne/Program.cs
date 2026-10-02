@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProjectOne.Application;
 using ProjectOne.Application.Auth;
 using ProjectOne.Application.Identity;
+using ProjectOne.Domain.Enum;
 using ProjectOne.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,14 +55,71 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSection["Key"]!))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (context.Request.Cookies.TryGetValue("access_token", out var token))
+                    context.Token = token;
+
+                return Task.CompletedTask;
+            }
+        };
     });
+const string CorsPolicy = "Frontend";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicy, policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173", "https://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseAuthentication(); // порядок важен: сначала Authentication
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+    foreach (var role in new[] { Roles.Administrator, Roles.Client })
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+    }
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    const string adminEmail = "admin@projectone.local";
+    const string adminPassword = "Admin123!";
+
+    if (await userManager.FindByEmailAsync(adminEmail) is null)
+    {
+        var admin = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FullName = "Administrator",
+            EmailConfirmed = true
+        };
+
+        var createResult = await userManager.CreateAsync(admin, adminPassword);
+        if (createResult.Succeeded)
+            await userManager.AddToRoleAsync(admin, Roles.Administrator);
+    }
+
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+app.UseCors(CorsPolicy);
+
+app.UseAuthentication();
 app.UseAuthorization(); 
 
 app.MapControllers();

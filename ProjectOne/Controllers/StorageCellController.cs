@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectOne.Application.StorageCell.CreateStorageCell;
 using ProjectOne.Application.StorageCell.DeleteStorageCell;
 using ProjectOne.Application.StorageCell.GetStorageCell;
 using ProjectOne.Application.StorageCell.PatchStorageCell;
 using ProjectOne.Application.StorageCell.ReserveStorageCell;
 using ProjectOne.Application.StorageCell.UpdateStorageCell;
+using ProjectOne.Domain.Enum;
 using ProjectOne.Extensions;
 
 namespace ProjectOne.Controllers;
@@ -14,6 +16,7 @@ namespace ProjectOne.Controllers;
 public class StorageCellController : ControllerBase
 {
     [HttpPost]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> AddStorageCellAsync(
         [FromServices] CreateStorageCellHandler createStorageCellHandler,
         [FromBody] CreateStorageCellRequest createStorageCellRequest,
@@ -25,6 +28,7 @@ public class StorageCellController : ControllerBase
         return storageCell.ToResponse();
     }
     [HttpPost("{id:guid}/reserve")]
+    [Authorize(Roles = $"{Roles.Administrator}, {Roles.Client}" )]
     public async Task<ActionResult> ReserveAsync(
         [FromServices] ReserveStorageCellHandler handler, Guid id, CancellationToken ct = default)
     {
@@ -33,6 +37,7 @@ public class StorageCellController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<GetStorageCellResponse>> GetStorageCellAsync(
         [FromServices] GetStorageCellHandler handler,
         Guid id,
@@ -43,6 +48,7 @@ public class StorageCellController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<GetStorageCellResponse>>> GetStorageCellAsync(
         [FromServices] GetAllStorageCellHandler handler,
         CancellationToken cancellationToken = default)
@@ -52,6 +58,7 @@ public class StorageCellController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> UpdateStorageCellAsync(
         [FromServices] UpdateStorageCellHandler handler,
         Guid id,
@@ -63,6 +70,7 @@ public class StorageCellController : ControllerBase
     }
 
     [HttpPatch("{id:guid}")]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<ActionResult<Guid>> PatchStorageCellAsync(
         [FromServices] PatchStorageCellHandler handler,
         Guid id,
@@ -74,6 +82,7 @@ public class StorageCellController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles =  Roles.Administrator)]
     public async Task<ActionResult> DeleteStorageCellAsync(
         [FromServices] DeleteStorageCellHandler handler,
         Guid id,

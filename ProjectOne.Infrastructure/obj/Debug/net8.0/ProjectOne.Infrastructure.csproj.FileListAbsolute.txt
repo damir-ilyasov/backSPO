@@ -17,3 +17,4 @@ C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Infrastructure\obj\De
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Infrastructure\obj\Debug\net8.0\ProjectOne.Infrastructure.pdb
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Infrastructure\obj\Debug\net8.0\ProjectOne.Infrastructure.genruntimeconfig.cache
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Infrastructure\obj\Debug\net8.0\ref\ProjectOne.Infrastructure.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Infrastructure\obj\Debug\net8.0\ProjectOne.Infrastructure.sourcelink.json

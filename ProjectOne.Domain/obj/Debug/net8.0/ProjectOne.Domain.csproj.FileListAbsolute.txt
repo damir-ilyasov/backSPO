@@ -10,3 +10,4 @@ C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\refint\ProjectOne.Domain.dll
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.pdb
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ref\ProjectOne.Domain.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Domain\obj\Debug\net8.0\ProjectOne.Domain.sourcelink.json

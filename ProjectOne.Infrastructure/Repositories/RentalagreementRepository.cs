@@ -40,9 +40,12 @@ public class RentalagreementRepository : IRentalagreementRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Rentalagreement>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Rentalagreement>> GetAllAsync(
+        CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Rentalagreements.ToListAsync(cancellationToken);
+        return await _dbContext.Rentalagreements
+            .Include(r => r.StorageCell)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task UpdateRentalagreementAsync(Rentalagreement rentalagreement,

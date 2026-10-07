@@ -18,21 +18,31 @@ public class GetRentalagreementHandler
     {
         var storageId = RentalagreementId.Create(id);
         
-        var storageCell = await _repository.GetRentalagreementByIdAsync(storageId);
+        var rentalagreement = await _repository.GetRentalagreementByIdAsync(storageId);
 
-        if(storageCell.IsFailure)
-            return storageCell.Error;
-        
-        var s = storageCell.Value;
-        
-        return new GetRentalagreementResponse(s.Id.Value, s.StorageId.Value, s.StartDate, s.EndDate,
-            s.TotalPrice);
+        if (rentalagreement.IsFailure)
+            return rentalagreement.Error;
+
+        var r = rentalagreement.Value;
+
+        return new GetRentalagreementResponse(
+            r.Id.Value,
+            r.StorageId.Value,
+            r.StorageCell.NumberStorageCalls,
+            r.StorageCell.Floor,
+            r.StorageCell.Price,
+            r.StartDate,
+            r.EndDate,
+            r.TotalPrice);;
     }
 }
 
 public record GetRentalagreementResponse(
     Guid id,
     Guid storageId,
+    string numberStorageCalls,
+    int? floor,
+    decimal price,
     DateTime startDate,
     DateTime endDate,
     decimal totalPrice);

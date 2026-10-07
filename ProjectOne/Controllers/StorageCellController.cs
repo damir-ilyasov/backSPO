@@ -28,12 +28,31 @@ public class StorageCellController : ControllerBase
         return storageCell.ToResponse();
     }
     [HttpPost("{id:guid}/reserve")]
-    [Authorize(Roles = $"{Roles.Administrator}, {Roles.Client}" )]
+    [Authorize(Roles = $"{Roles.Administrator}, {Roles.Client}")]
     public async Task<ActionResult> ReserveAsync(
-        [FromServices] ReserveStorageCellHandler handler, Guid id, CancellationToken ct = default)
+        [FromServices] ReserveStorageCellHandler handler,
+        Guid id,
+        [FromBody] ReserveStorageCellRequest request,
+        CancellationToken ct = default)
     {
-        var result = await handler.ReserveAsync(id, ct);
-        return result.IsSuccess ? NoContent() : result.Error.ToResponse();
+        var userIdClaim = User.FindFirst(
+            System.Security.Claims.ClaimTypes.NameIdentifier);
+
+        if (userIdClaim is null)
+            return Unauthorized();
+
+        if (!Guid.TryParse(userIdClaim.Value, out var clientId))
+            return Unauthorized();
+
+        var result = await handler.ReserveAsync(
+            id,
+            clientId,
+            request,
+            ct);
+
+        return result.IsSuccess
+            ? NoContent()
+            : result.Error.ToResponse();
     }
     
     [HttpGet("{id:guid}")]

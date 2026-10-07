@@ -16,8 +16,16 @@ public class GetAllRentalagreementHandler
         var rentalagreement = await _rentalagreementRepository.GetAllAsync(cancellationToken);
         
         return rentalagreement
-            .Select(r => 
-                new GetRentalagreementResponse(r.Id.Value, r.StorageId.Value, r.StartDate, r.EndDate, r.TotalPrice))
+            .Select(r =>
+                new GetRentalagreementResponse(
+                    r.Id.Value,
+                    r.StorageId.Value,
+                    r.StorageCell.NumberStorageCalls,
+                    r.StorageCell.Floor,
+                    r.StorageCell.Price,
+                    r.StartDate,
+                    r.EndDate,
+                    r.TotalPrice))
             .ToList();
     }
 }

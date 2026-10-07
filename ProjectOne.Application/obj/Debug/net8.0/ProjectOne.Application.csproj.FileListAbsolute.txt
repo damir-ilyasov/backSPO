@@ -13,3 +13,4 @@ C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Application\obj\Debug
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Application\obj\Debug\net8.0\refint\ProjectOne.Application.dll
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Application\obj\Debug\net8.0\ProjectOne.Application.pdb
 C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Application\obj\Debug\net8.0\ref\ProjectOne.Application.dll
+C:\Users\Damir-ilyasov\RiderProjects\ProjectOne\ProjectOne.Application\obj\Debug\net8.0\ProjectOne.Application.sourcelink.json

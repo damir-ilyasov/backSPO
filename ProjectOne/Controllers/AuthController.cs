@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectOne.Application.Auth.Login;
 using ProjectOne.Application.Auth.Register;
@@ -45,6 +46,18 @@ public class AuthController : ControllerBase
         return Ok();
     }
     
+    [HttpGet("me")]
+    [Authorize]
+    public ActionResult Me()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var name = User.FindFirstValue(ClaimTypes.Name);
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var role = User.FindFirstValue(ClaimTypes.Role);
+
+        return Ok(new { id, email, fullName = name, role });
+    }
+
     private void SetTokenCookie(string token)
     {
         Response.Cookies.Append("access_token", token, new CookieOptions
